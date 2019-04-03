@@ -11,16 +11,16 @@ def Loss(y_pred, y):
     y = np.array(y).reshape(-1, 1)
     return 0.5 * np.mean((y_pred - y) ** 2)
 
-def relu(x):
-    """ReLU-функция"""
+def leaky_relu(x, alpha=0.01):
+    """LeakyReLU-функция"""
 
-    return x * (x > 0)
+    return np.where(x > 0, x, x * alpha)
 
-def relu_derivative(x):
-    """Производная ReLU"""
-    return np.array(x > 0, dtype=np.int64)
+def leaky_relu_derivative(x, alpha=0.01):
+    """Производная LeakyReLU"""
+    return np.where(x > 0, 1, alpha)
 
-class NeuronReLU:
+class NeuronLeakyReLU:
     def __init__(self, w=None, b=0):
         """
         :param: w -- вектор весов
@@ -31,7 +31,7 @@ class NeuronReLU:
         self.b = b
 
     def activate(self, x):
-        return relu(x)
+        return leaky_relu(x)
 
     def forward_pass(self, X):
         """
@@ -84,6 +84,6 @@ X = np.array([[1., 3.],
               [2., 4.],
               [-1., -3.2]])
 
-neuron = NeuronReLU(w, b)
+neuron = NeuronLeakyReLU(w, b)
 y_pred = neuron.forward_pass(X)
 print ("y_pred = " + str(y_pred))
